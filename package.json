@@ -1,0 +1,36 @@
+{
+  "name": "sgvv",
+  "version": "1.0.0",
+  "description": "Sistema de Gerenciamento de Veículos e Viagens",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deyvissonbrenoveras/sgvv.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deyvissonbrenoveras/sgvv/issues"
+  },
+  "homepage": "https://github.com/deyvissonbrenoveras/sgvv#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.15"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "nodemon": "^2.0.6",
+    "prettier": "^2.1.2",
+    "sucrase": "^3.16.0"
+  }
+}
