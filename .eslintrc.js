@@ -21,6 +21,9 @@ module.exports = {
     camelcase: 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: 'next' }],
     'no-console': 'off',
+    'consistent-return': 'off',
+    'func-names': 'off',
+    'no-underscore-dangle': 'off',
   },
   plugins: ['prettier'],
 };
