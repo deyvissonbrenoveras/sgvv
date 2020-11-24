@@ -17,10 +17,10 @@ class UserController {
     }
 
     const loggedUserId = req.user._id;
-    const loggedUser = await User.findById(loggedUserId);
+    const loggedUser = await User.findOne({ _id: loggedUserId, active: true });
     if (!loggedUser || !loggedUser.isAdmin()) {
       return res
-        .status(400)
+        .status(401)
         .json({ error: 'Você não tem permissão para criar usuários' });
     }
 
@@ -54,7 +54,10 @@ class UserController {
     }
 
     if (user._id !== loggedUserId) {
-      const loggedUser = await User.findById(loggedUserId);
+      const loggedUser = await User.findOne({
+        _id: loggedUserId,
+        active: true,
+      });
       if (!loggedUser || !loggedUser.isAdmin()) {
         return res
           .status(400)
