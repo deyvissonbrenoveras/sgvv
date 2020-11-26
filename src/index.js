@@ -1,6 +1,7 @@
 import express from 'express';
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import routes from './routes';
 
 config();
@@ -16,6 +17,8 @@ mongoose.connect(
     }
   }
 );
+
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 app.use(express.json(), routes);
 
