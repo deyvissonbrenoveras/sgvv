@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const vehicleSchema = mongoose.Schema({
   description: { type: String, required: true },
   model: { type: String },
-  manufacturingYear: { type: Date },
+  manufacturingYear: { type: Number },
   brand: { type: String, required: true },
   paintColor: { type: String },
   licensePlate: { type: String },

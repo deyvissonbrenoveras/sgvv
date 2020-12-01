@@ -23,6 +23,7 @@ class VehicleController {
       description: Yup.string().required(),
       model: Yup.string().notRequired(),
       brand: Yup.string().required(),
+      manufacturingYear: Yup.number().min(1900).max(2099).notRequired(),
       paintColor: Yup.string().notRequired(),
       licensePlate: Yup.string().notRequired(),
       active: Yup.boolean().notRequired(),
@@ -42,13 +43,15 @@ class VehicleController {
         .json({ error: 'Já existe um veículo cadastrado com essa descrição' });
     }
 
-    const vehiclePlateExists = await Vehicle.findOne({
-      licensePlate: newVehicle.licensePlate,
-    });
-    if (vehiclePlateExists) {
-      return res
-        .status(400)
-        .json({ error: 'Já existe um veículo cadastrado com essa placa' });
+    if (newVehicle.licensePlate) {
+      const vehiclePlateExists = await Vehicle.findOne({
+        licensePlate: newVehicle.licensePlate,
+      });
+      if (vehiclePlateExists) {
+        return res
+          .status(400)
+          .json({ error: 'Já existe um veículo cadastrado com essa placa' });
+      }
     }
 
     const vehicle = await Vehicle.create(req.body);
@@ -73,14 +76,15 @@ class VehicleController {
         .status(400)
         .json({ error: 'Já existe um veículo cadastrado com essa descrição' });
     }
-
-    const vehiclePlateExists = await Vehicle.findOne({
-      licensePlate: vehicleUpdate.licensePlate,
-    });
-    if (vehiclePlateExists && !vehiclePlateExists._id.equals(_id)) {
-      return res
-        .status(400)
-        .json({ error: 'Já existe um veículo cadastrado com essa placa' });
+    if (vehicleUpdate.licensePlate) {
+      const vehiclePlateExists = await Vehicle.findOne({
+        licensePlate: vehicleUpdate.licensePlate,
+      });
+      if (vehiclePlateExists && !vehiclePlateExists._id.equals(_id)) {
+        return res
+          .status(400)
+          .json({ error: 'Já existe um veículo cadastrado com essa placa' });
+      }
     }
     const vehicleUpdated = await Vehicle.findOneAndUpdate(
       { _id },
