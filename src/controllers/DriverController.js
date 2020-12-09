@@ -51,6 +51,7 @@ class DriverController {
   async update(req, res) {
     const { _id } = req.params;
     const driverUpdate = req.body;
+    console.log(driverUpdate);
     const driverExists = await Driver.findById(_id);
     const loggedUser = await User.findOne({ _id: req.user._id, active: true });
     if (!driverExists) {
@@ -69,12 +70,11 @@ class DriverController {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       avatar: Yup.string().notRequired(),
-      password: Yup.string().min(6).notRequired(),
-      // newPassword: Yup.string().when('password', {
-      //   is: (password) => password,
-      //   then: Yup.string().min(6).required(),
-      // }),
       newPassword: Yup.string().min(6).notRequired(),
+      password: Yup.string().when('newPassword', {
+        is: (newPassword) => newPassword && newPassword.length > 0,
+        then: Yup.string().required(),
+      }),
     });
     if (!(await schema.isValid(driverUpdate))) {
       return res.status(400).json({ error: 'Motorista não validado' });
