@@ -10,6 +10,7 @@ import FileController from './controllers/FileController';
 import AuthMiddleware from './middlewares/Auth';
 import DriverController from './controllers/DriverController';
 import VehicleController from './controllers/VehicleController';
+import TripController from './controllers/TripController';
 
 const upload = multer(multerConfig);
 
@@ -35,4 +36,6 @@ routes.get('/vehicles', VehicleController.show);
 routes.get('/vehicles/:_id', VehicleController.index);
 routes.put('/vehicles/:_id', VehicleController.update);
 routes.post('/vehicles', VehicleController.store);
+
+routes.post('/trips', TripController.store);
 export default routes;
