@@ -1,10 +1,16 @@
 import mongoose from 'mongoose';
 
 const tripSchema = mongoose.Schema({
-  start: { type: Date, required: true },
-  end: { type: Date },
-  departureLocation: { type: Array },
-  arrivalLocation: { type: Array },
+  startTime: { type: Date, required: true },
+  endTime: { type: Date },
+  departureLocation: {
+    name: { type: String },
+    latLon: { type: Array },
+  },
+  arrivalLocation: {
+    name: { type: String },
+    latLon: { type: Array },
+  },
   vehicle: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Vehicle',
