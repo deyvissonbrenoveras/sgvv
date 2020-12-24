@@ -37,5 +37,6 @@ routes.get('/vehicles/:_id', VehicleController.index);
 routes.put('/vehicles/:_id', VehicleController.update);
 routes.post('/vehicles', VehicleController.store);
 
+routes.get('/trips', TripController.show);
 routes.post('/trips', TripController.store);
 export default routes;

@@ -1,6 +1,13 @@
 import Trip from '../models/Trip';
 
 class TripController {
+  async show(req, res) {
+    const trips = await Trip.find({ finished: false })
+      .populate('driver')
+      .populate('vehicle');
+    return res.json(trips);
+  }
+
   async store(req, res) {
     const { driver, vehicle } = req.body;
     const driverIsBusy = await Trip.findOne({ driver, finished: false });
