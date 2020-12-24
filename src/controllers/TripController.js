@@ -3,8 +3,21 @@ import Trip from '../models/Trip';
 class TripController {
   async show(req, res) {
     const trips = await Trip.find({ finished: false })
-      .populate('driver')
-      .populate('vehicle');
+      .populate({
+        path: 'driver',
+        select: { name: 1 },
+        populate: {
+          path: 'avatar',
+          model: 'File',
+        },
+      })
+      .populate({
+        path: 'vehicle',
+        populate: {
+          path: 'image',
+          model: 'File',
+        },
+      });
     return res.json(trips);
   }
 
