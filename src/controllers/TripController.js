@@ -52,8 +52,8 @@ class TripController {
 
     const schema = Yup.object().shape({
       driver: Yup.string().required(),
-      vehicle: Yup.string().min(6).required(),
-      departureLocation: Yup.object({
+      vehicle: Yup.string().required(),
+      departureLocation: Yup.object().shape({
         name: Yup.string().required(),
         latLon: Yup.array()
           .of(Yup.number().required())
@@ -61,7 +61,7 @@ class TripController {
           .max(2)
           .required(),
       }),
-      arrivalLocation: Yup.object({
+      arrivalLocation: Yup.object().shape({
         name: Yup.string().required(),
         latLon: Yup.array()
           .of(Yup.number().required())
@@ -97,7 +97,23 @@ class TripController {
 
   async update(req, res) {
     const { _id } = req.params;
-    const trip = await Trip.findById(_id);
+    const { amountSpent } = req.body;
+    const trip = await Trip.findById(_id)
+      .populate({
+        path: 'driver',
+        select: { name: 1 },
+        populate: {
+          path: 'avatar',
+          model: 'File',
+        },
+      })
+      .populate({
+        path: 'vehicle',
+        populate: {
+          path: 'image',
+          model: 'File',
+        },
+      });
     if (!trip) {
       return res.status(400).json({ error: 'A viagem informada não existe' });
     }
@@ -106,6 +122,8 @@ class TripController {
     }
     trip.endTime = new Date(Date.now());
     trip.finished = true;
+
+    trip.amountSpent = amountSpent;
     await trip.save();
     return res.json(trip);
   }

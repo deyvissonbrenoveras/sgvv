@@ -1,4 +1,5 @@
 src/uploads
+.vscode
 # Logs
 logs
 *.log
