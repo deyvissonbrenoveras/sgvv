@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { startOfDay, endOfDay, parseISO } from 'date-fns';
 import Trip from '../models/Trip';
 
 class TripController {
@@ -28,7 +29,26 @@ class TripController {
   }
 
   async show(req, res) {
-    const trips = await Trip.find()
+    const startTime = startOfDay(parseISO(req.query.startTime));
+    const endTime = endOfDay(parseISO(req.query.endTime));
+
+    const trips = await Trip.find({
+      startTime: {
+        $gte: startTime,
+      },
+      $or: [
+        {
+          endTime: {
+            $lt: endTime,
+          },
+        },
+        {
+          endTime: {
+            $exists: false,
+          },
+        },
+      ],
+    })
       .populate({
         path: 'driver',
         select: { name: 1 },
