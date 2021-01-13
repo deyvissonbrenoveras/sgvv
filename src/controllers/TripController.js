@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { startOfDay, endOfDay, parseISO } from 'date-fns';
+import bcrypt from 'bcryptjs';
 import Trip from '../models/Trip';
 
 class TripController {
@@ -29,9 +30,13 @@ class TripController {
   }
 
   async show(req, res) {
-    const startTime = startOfDay(parseISO(req.query.startTime));
-    const endTime = endOfDay(parseISO(req.query.endTime));
+    const startTime = startOfDay(
+      req.query.startTime ? parseISO(req.query.startTime) : new Date(Date.now())
+    );
 
+    const endTime = endOfDay(
+      req.query.endTime ? parseISO(req.query.endTime) : new Date(2099, 0, 1)
+    );
     const trips = await Trip.find({
       startTime: {
         $gte: startTime,
@@ -117,11 +122,11 @@ class TripController {
 
   async update(req, res) {
     const { _id } = req.params;
-    const { amountSpent } = req.body;
+    const { amountSpent, password } = req.body;
     const trip = await Trip.findById(_id)
       .populate({
         path: 'driver',
-        select: { name: 1 },
+        select: { name: 1, passwordHash: 1 },
         populate: {
           path: 'avatar',
           model: 'File',
@@ -140,12 +145,17 @@ class TripController {
     if (trip.finished) {
       return res.status(400).json({ error: 'Essa viagem já foi encerrada' });
     }
+    if (!bcrypt.compareSync(password || '', trip.driver.passwordHash)) {
+      return res.status(401).json({ error: 'Senha do motorista incorreta!' });
+    }
     trip.endTime = new Date(Date.now());
     trip.finished = true;
 
     trip.amountSpent = amountSpent;
     await trip.save();
-    return res.json(trip);
+    const resultTrip = trip.toObject();
+    delete resultTrip.driver.passwordHash;
+    return res.json(resultTrip);
   }
 }
 
