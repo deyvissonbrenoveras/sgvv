@@ -1,10 +1,25 @@
+import sharp from 'sharp';
+import { resolve } from 'path';
+import { unlinkSync } from 'fs';
 import File from '../models/File';
 
 class FileController {
   async store(req, res) {
-    const { filename } = req.file;
-    const file = await File.create({ filename });
-    return res.json(file);
+    const { originalname: name, filename, path: filePath } = req.file;
+
+    await sharp(filePath)
+      .resize({ width: 300, withoutEnlargement: true })
+      .webp({ quality: 60 })
+      .toFile(resolve(__dirname, '..', '..', 'tmp', 'uploads', filename));
+
+    unlinkSync(filePath);
+
+    const { _id, url } = await File.create({ name, filename });
+    return res.json({
+      _id,
+      url,
+      path: filename,
+    });
   }
 }
 

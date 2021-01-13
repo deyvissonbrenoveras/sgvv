@@ -1,13 +1,17 @@
 import multer from 'multer';
-import path from 'path';
+import crypto from 'crypto';
+import { resolve } from 'path';
 
 export default {
   storage: multer.diskStorage({
     destination(req, file, cb) {
-      cb(null, path.join(__dirname, '../uploads'));
+      cb(null, resolve(__dirname, '..', '..', 'tmp', 'tmpUploads'));
     },
     filename(req, file, cb) {
-      cb(null, `${Date.now()}-${file.originalname}`);
+      crypto.randomBytes(16, (err, res) => {
+        if (err) return cb(err);
+        return cb(null, `${res.toString('hex')}.webp`);
+      });
     },
   }),
 };
