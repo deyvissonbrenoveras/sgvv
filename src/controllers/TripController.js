@@ -75,6 +75,7 @@ class TripController {
     }
     console.log(query);
     const trips = await Trip.find(query)
+
       .populate({
         path: 'driver',
         select: { name: 1 },
