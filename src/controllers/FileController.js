@@ -8,8 +8,8 @@ class FileController {
     const { originalname: name, filename, path: filePath } = req.file;
 
     await sharp(filePath)
-      .resize({ width: 300, withoutEnlargement: true })
-      .webp({ quality: 60 })
+      .resize({ width: 600, withoutEnlargement: true })
+      .webp({ quality: 80 })
       .toFile(resolve(__dirname, '..', '..', 'tmp', 'uploads', filename));
 
     unlinkSync(filePath);

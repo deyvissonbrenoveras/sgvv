@@ -2,7 +2,7 @@
   "name": "sgvv",
   "version": "1.0.0",
   "description": "Sistema de Gerenciamento de Veículos e Viagens",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.js",

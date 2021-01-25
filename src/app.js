@@ -20,7 +20,7 @@ class App {
       { useNewUrlParser: true, useUnifiedTopology: true },
       (error) => {
         if (error) {
-          console.log('Error while connection database');
+          console.log('Error while connecting database');
         }
       }
     );
