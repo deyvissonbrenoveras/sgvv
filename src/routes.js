@@ -1,5 +1,4 @@
-import express, { Router } from 'express';
-import { resolve } from 'path';
+import { Router } from 'express';
 
 import multer from 'multer';
 import multerConfig from './config/multerConfig';
@@ -17,10 +16,6 @@ const upload = multer(multerConfig);
 const routes = Router();
 
 routes.post('/sessions', SessionController.store);
-routes.use(
-  '/uploads',
-  express.static(resolve(__dirname, '..', 'tmp', 'uploads'))
-);
 
 // AUTH MIDDLEWARE
 routes.use(AuthMiddleware);
