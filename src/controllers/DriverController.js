@@ -18,7 +18,9 @@ class DriverController {
   }
 
   async show(req, res) {
-    const drivers = await Driver.find().populate('avatar');
+    const drivers = await Driver.find()
+      .populate('avatar')
+      .select('-passwordHash');
     return res.json(drivers);
   }
 
