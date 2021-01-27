@@ -3,6 +3,17 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User';
 
 class UserController {
+  async index(req, res) {
+    const { _id } = req.params;
+    const user = await User.findById(_id).select('-passwordHash');
+
+    if (!user) {
+      return res.status(400).json({ error: 'O usuário informado não existe' });
+    }
+
+    return res.json(user);
+  }
+
   async store(req, res) {
     const newUser = req.body;
 
@@ -38,11 +49,12 @@ class UserController {
     let userUpdated = req.body;
     const { _id } = req.params;
 
-    // falta validar o password
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
-      password: Yup.string().min(6),
+      password: Yup.string().test('min6', '', (value) =>
+        value.trim().length > 0 ? value.length >= 6 : true
+      ),
     });
     if (!(await schema.isValid(userUpdated))) {
       return res.status(400).json({ error: 'Usuário não validado' });
@@ -53,7 +65,7 @@ class UserController {
       return res.status(400).json({ error: 'O usuário informado não existe' });
     }
 
-    if (user._id !== loggedUserId) {
+    if (_id !== loggedUserId) {
       const loggedUser = await User.findOne({
         _id: loggedUserId,
         active: true,
@@ -73,6 +85,11 @@ class UserController {
     });
     const { name, email, active } = userUpdated;
     return res.json({ _id, name, email, active });
+  }
+
+  async show(req, res) {
+    const users = await User.find().select('-passwordHash');
+    return res.json(users);
   }
 }
 

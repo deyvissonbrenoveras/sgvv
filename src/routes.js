@@ -22,6 +22,8 @@ routes.use(AuthMiddleware);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
+routes.get('/users', UserController.show);
+routes.get('/users/:_id', UserController.index);
 routes.post('/users', UserController.store);
 routes.put('/users/:_id', UserController.update);
 
