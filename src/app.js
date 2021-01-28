@@ -16,7 +16,7 @@ class App {
 
   database() {
     mongoose.connect(
-      'mongodb://localhost/sgvv',
+      `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_ADDRESS}/sgvv?authSource=admin`,
       { useNewUrlParser: true, useUnifiedTopology: true },
       (error) => {
         if (error) {
