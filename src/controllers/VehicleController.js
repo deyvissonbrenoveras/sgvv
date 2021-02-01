@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import Vehicle from '../models/Vehicle';
+import Trip from '../models/Trip';
 
 class VehicleController {
   async index(req, res) {
@@ -12,7 +13,16 @@ class VehicleController {
   }
 
   async show(req, res) {
-    const vehicles = await Vehicle.find().populate('image');
+    const vehicles = await Vehicle.find().populate('image').lean();
+    const trips = await Trip.find({ finished: false }).lean();
+    for (let i = 0; i < vehicles.length; i += 1) {
+      vehicles[i].busy = false;
+      for (let k = 0; k < trips.length; k += 1) {
+        if (vehicles[i]._id.toString() === trips[k].vehicle.toString()) {
+          vehicles[i].busy = true;
+        }
+      }
+    }
     return res.json(vehicles);
   }
 

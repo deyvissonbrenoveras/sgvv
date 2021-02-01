@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import bcrypt from 'bcryptjs';
 import Driver from '../models/Driver';
 import User from '../models/User';
+import Trip from '../models/Trip';
 
 class DriverController {
   async index(req, res) {
@@ -20,7 +21,17 @@ class DriverController {
   async show(req, res) {
     const drivers = await Driver.find()
       .populate('avatar')
-      .select('-passwordHash');
+      .select('-passwordHash')
+      .lean();
+    const trips = await Trip.find({ finished: false }).lean();
+    for (let i = 0; i < drivers.length; i += 1) {
+      drivers[i].busy = false;
+      for (let k = 0; k < trips.length; k += 1) {
+        if (drivers[i]._id.toString() === trips[k].driver.toString()) {
+          drivers[i].busy = true;
+        }
+      }
+    }
     return res.json(drivers);
   }
 
