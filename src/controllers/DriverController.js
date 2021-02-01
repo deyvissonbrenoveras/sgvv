@@ -22,7 +22,7 @@ class DriverController {
     const drivers = await Driver.find()
       .populate('avatar')
       .select('-passwordHash')
-      .lean();
+      .lean({ virtuals: true });
     const trips = await Trip.find({ finished: false }).lean();
     for (let i = 0; i < drivers.length; i += 1) {
       drivers[i].busy = false;

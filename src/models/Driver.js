@@ -8,5 +8,4 @@ const driverSchema = mongoose.Schema({
     ref: 'File',
   },
 });
-
 export default mongoose.model('Driver', driverSchema);

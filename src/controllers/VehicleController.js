@@ -13,7 +13,9 @@ class VehicleController {
   }
 
   async show(req, res) {
-    const vehicles = await Vehicle.find().populate('image').lean();
+    const vehicles = await Vehicle.find()
+      .populate('image')
+      .lean({ virtuals: true });
     const trips = await Trip.find({ finished: false }).lean();
     for (let i = 0; i < vehicles.length; i += 1) {
       vehicles[i].busy = false;

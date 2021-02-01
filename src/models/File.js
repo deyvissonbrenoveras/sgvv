@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongooseLeanVirtuals from 'mongoose-lean-virtuals';
 
 const fileSchema = mongoose.Schema(
   {
@@ -16,4 +17,6 @@ const fileSchema = mongoose.Schema(
 fileSchema.virtual('url').get(function () {
   return `${process.env.BASE_URL}/uploads/${this.filename}`;
 });
+fileSchema.plugin(mongooseLeanVirtuals);
+
 export default mongoose.model('File', fileSchema);
